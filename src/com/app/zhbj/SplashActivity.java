@@ -1,34 +1,78 @@
 package com.app.zhbj;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.app.utils.PrefUtils;
 
-public class MainActivity extends Activity {
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationSet;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
+import android.widget.RelativeLayout;
+
+public class SplashActivity extends Activity {
+
+	private RelativeLayout rlRoot;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
+		setContentView(R.layout.activity_splash);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+		rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
+		RotateAnimation animRotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f,
+				Animation.RELATIVE_TO_SELF, 0.5f);
+		animRotate.setDuration(1000);// ����ʱ��
+		animRotate.setFillAfter(true);// ���ֶ�������״̬
+		// ���Ŷ���
+		ScaleAnimation animScale = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f,
+				Animation.RELATIVE_TO_SELF, 0.5f);
+		animScale.setDuration(1000);
+		animScale.setFillAfter(true);// ���ֶ�������״̬
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		// ���䶯��
+		AlphaAnimation animAlpha = new AlphaAnimation(0, 1);
+		animAlpha.setDuration(2000);// ����ʱ��
+		animAlpha.setFillAfter(true);// ���ֶ�������״̬
+
+		// ��������
+		AnimationSet set = new AnimationSet(true);
+		set.addAnimation(animRotate);
+		set.addAnimation(animScale);
+		set.addAnimation(animAlpha);
+		
+		rlRoot.startAnimation(set);
+		
+		set.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				boolean isFirst = PrefUtils.getBoolean(SplashActivity.this, "is_first_enter", true);
+				Intent intent;
+				if(isFirst){
+					intent = new Intent(getApplicationContext(),
+							MainActivity.class);
+				}else{
+					intent = new Intent(getApplicationContext(),
+							MainActivity.class);
+				}
+				startActivity(intent);
+			}
+		});
 	}
 }
