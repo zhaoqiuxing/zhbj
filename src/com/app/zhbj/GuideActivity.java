@@ -3,19 +3,23 @@ package com.app.zhbj;
 import java.util.ArrayList;
 
 import com.app.utils.DensityUtils;
+import com.app.utils.PrefUtils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class GuideActivity extends Activity {
 	private ViewPager mViewPager;
@@ -53,8 +57,16 @@ public class GuideActivity extends Activity {
 			}
 
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				// 当页面滑动过程中的回调
+				System.out.println("当前位置:" + position + ";移动偏移百分比:" + positionOffset);
+				// 更新小红点距离
+				int leftMargin = (int) (mPointDis * positionOffset) + position * mPointDis;// 计算小红点当前的左边距
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivRedPoint.getLayoutParams();
+				params.leftMargin = leftMargin;// 修改左边距
+
+				// 重新设置布局参数
+				ivRedPoint.setLayoutParams(params);
 
 			}
 
@@ -64,16 +76,27 @@ public class GuideActivity extends Activity {
 
 			}
 		});
-		
+
 		ivRedPoint.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
 				// 移除监听,避免重复回调
-				ivRedPoint.getViewTreeObserver()
-						.removeOnGlobalLayoutListener(this);
-				mPointDis = llContainer.getChildAt(1).getLeft()
-						- llContainer.getChildAt(0).getLeft();
+				ivRedPoint.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				mPointDis = llContainer.getChildAt(1).getLeft() - llContainer.getChildAt(0).getLeft();
 				System.out.println("圆点距离:" + mPointDis);
+			}
+		});
+		
+		btnStart.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// 更新sp, 已经不是第一次进入了
+				PrefUtils.setBoolean(getApplicationContext(), "is_first_enter", false);
+
+				// 跳到主页面
+				startActivity(new Intent(getApplicationContext(), MainActivity.class));
+				finish();
 			}
 		});
 	}
