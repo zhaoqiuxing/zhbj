@@ -66,12 +66,13 @@ public class SplashActivity extends Activity {
 				Intent intent;
 				if(isFirst){
 					intent = new Intent(getApplicationContext(),
-							MainActivity.class);
+							GuideActivity.class);
 				}else{
 					intent = new Intent(getApplicationContext(),
 							MainActivity.class);
 				}
 				startActivity(intent);
+				finish();
 			}
 		});
 	}
