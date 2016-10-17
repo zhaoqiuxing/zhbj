@@ -33,7 +33,10 @@ public class GovAffairsPager extends BasePager {
 		view.setGravity(Gravity.CENTER);
 
 		flContent.addView(view);
-
+		// 修改页面标题
+		tvTitle.setText("人口管理");
+		// 显示菜单按钮
+		btnMenu.setVisibility(View.VISIBLE);
 	}
 
 }

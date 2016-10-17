@@ -32,6 +32,9 @@ public class SmartServicePager extends BasePager {
 		view.setGravity(Gravity.CENTER);
 
 		flContent.addView(view);
-
+		// 修改页面标题
+		tvTitle.setText("生活");
+		// 显示菜单按钮
+		btnMenu.setVisibility(View.VISIBLE);
 	}
 }

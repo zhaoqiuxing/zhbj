@@ -32,7 +32,10 @@ public class HomePager extends BasePager {
 		view.setGravity(Gravity.CENTER);
 
 		flContent.addView(view);
-
+		// 修改页面标题
+		tvTitle.setText("智慧北京");
+		// 隐藏菜单按钮
+		btnMenu.setVisibility(View.GONE);
 	}
 
 }
