@@ -3,7 +3,9 @@ package com.app.base.impl;
 import com.app.base.BasePager;
 import com.app.base.pojo.NewsMenu;
 import com.app.constants.GlobalConstants;
+import com.app.fragment.LeftMenuFragment;
 import com.app.utils.CacheUtils;
+import com.app.zhbj.MainActivity;
 import com.google.gson.Gson;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -47,13 +49,22 @@ public class NewsCenterPager extends BasePager {
 		// 开源框架: XUtils
 		getDataFromServer();
 	}
+
 	private void processData(String json) {
 		// Gson: Google Json
 		Gson gson = new Gson();
 		mNewsData = gson.fromJson(json, NewsMenu.class);
 		System.out.println("解析结果:" + mNewsData);
 
+		// 获取侧边栏对象
+		MainActivity mainUI = (MainActivity) mActivity;
+		LeftMenuFragment fragment = mainUI.getLeftMenuFragment();
+
+		// 给侧边栏设置数据
+		fragment.setMenuData(mNewsData.data);
+
 	}
+
 	private void getDataFromServer() {
 		HttpUtils utils = new HttpUtils();
 		utils.send(HttpMethod.GET, GlobalConstants.CATEGORY_URL, new RequestCallBack<String>() {
