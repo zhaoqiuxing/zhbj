@@ -1,6 +1,13 @@
 package com.app.base.impl;
 
+import java.util.ArrayList;
+
+import com.app.base.BaseMenuDetailPager;
 import com.app.base.BasePager;
+import com.app.base.meun.impl.InteractMenuDetailPager;
+import com.app.base.meun.impl.NewsMenuDetailPager;
+import com.app.base.meun.impl.PhotosMenuDetailPager;
+import com.app.base.meun.impl.TopicMenuDetailPager;
 import com.app.base.pojo.NewsMenu;
 import com.app.constants.GlobalConstants;
 import com.app.fragment.LeftMenuFragment;
@@ -26,6 +33,7 @@ import android.widget.Toast;
  */
 public class NewsCenterPager extends BasePager {
 	private NewsMenu mNewsData;// 分类信息网络数据
+	private ArrayList<BaseMenuDetailPager> mMenuDetailPagers;
 
 	public NewsCenterPager(Activity activity) {
 		super(activity);
@@ -62,8 +70,35 @@ public class NewsCenterPager extends BasePager {
 
 		// 给侧边栏设置数据
 		fragment.setMenuData(mNewsData.data);
+		// 初始化4个菜单详情页
+		mMenuDetailPagers = new ArrayList<BaseMenuDetailPager>();
+		mMenuDetailPagers.add(new NewsMenuDetailPager(mActivity, mNewsData.data
+				.get(0).children));
+		mMenuDetailPagers.add(new TopicMenuDetailPager(mActivity));
+		mMenuDetailPagers.add(new PhotosMenuDetailPager(mActivity));
+		mMenuDetailPagers.add(new InteractMenuDetailPager(mActivity));
+
+		// 将新闻菜单详情页设置为默认页面
+		setCurrentDetailPager(0);
 
 	}
+	// 设置菜单详情页
+		public void setCurrentDetailPager(int position) {
+			// 重新给frameLayout添加内容
+			BaseMenuDetailPager pager = mMenuDetailPagers.get(position);// 获取当前应该显示的页面
+			View view = pager.mRootView;// 当前页面的布局
+
+			// 清除之前旧的布局
+			flContent.removeAllViews();
+
+			flContent.addView(view);// 给帧布局添加布局
+
+			// 初始化页面数据
+			pager.initData();
+
+			// 更新标题
+			tvTitle.setText(mNewsData.data.get(position).title);
+		}
 
 	private void getDataFromServer() {
 		HttpUtils utils = new HttpUtils();

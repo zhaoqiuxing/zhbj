@@ -51,6 +51,7 @@ public class ContentFragment extends BaseFragment {
 		mPagers.add(new SettingPager(mActivity));
 
 		mViewPager.setAdapter(new ContentAdapter());
+
 		// 底栏标签切换监听
 		rgGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -102,7 +103,8 @@ public class ContentFragment extends BaseFragment {
 			}
 
 			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			public void onPageScrolled(int position, float positionOffset,
+					int positionOffsetPixels) {
 
 			}
 
@@ -111,6 +113,7 @@ public class ContentFragment extends BaseFragment {
 
 			}
 		});
+
 		// 手动加载第一页数据
 		mPagers.get(0).initData();
 		// 首页禁用侧边栏
@@ -162,5 +165,12 @@ public class ContentFragment extends BaseFragment {
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView((View) object);
 		}
+
+	}
+
+	// 获取新闻中心页面
+	public NewsCenterPager getNewsCenterPager() {
+		NewsCenterPager pager = (NewsCenterPager) mPagers.get(1);
+		return pager;
 	}
 }
