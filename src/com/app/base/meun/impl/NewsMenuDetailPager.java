@@ -4,8 +4,13 @@ import java.util.ArrayList;
 
 import com.app.base.BaseMenuDetailPager;
 import com.app.base.pojo.NewsMenu.NewsTabData;
+import com.app.zhbj.MainActivity;
 import com.app.zhbj.R;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.viewpagerindicator.TabPageIndicator;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
@@ -28,30 +33,15 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager implements
 		OnPageChangeListener {
 	private ArrayList<NewsTabData> mTabData;// 页签网络数据
 	private ArrayList<TabDetailPager> mPagers;// 页签页面集合
+	@ViewInject(R.id.vp_news_menu_detail)
 	private ViewPager mViewPager;
-	
+	@ViewInject(R.id.indicator)
+	private TabPageIndicator mIndicator;
 	public NewsMenuDetailPager(Activity activity,ArrayList<NewsTabData> children) {
 		super(activity);
 		mTabData = children;
 	}
 
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public View initView() {
@@ -72,6 +62,11 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager implements
 		}
 
 		mViewPager.setAdapter(new NewsMenuDetailAdapter());
+		mIndicator.setViewPager(mViewPager);// 将viewpager和指示器绑定在一起.注意:必须在viewpager设置完数据之后再绑定
+
+		// 设置页面滑动监听
+		// mViewPager.setOnPageChangeListener(this);
+		mIndicator.setOnPageChangeListener(this);// 此处必须给指示器设置页面监听,不能设置给viewpager
 	}
 	class NewsMenuDetailAdapter extends PagerAdapter {
 
@@ -109,6 +104,52 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager implements
 			container.removeView((View) object);
 		}
 
+	}
+	@Override
+	public void onPageScrolled(int position, float positionOffset,
+			int positionOffsetPixels) {
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		System.out.println("当前位置:" + position);
+		if (position == 0) {
+			// 开启侧边栏
+			setSlidingMenuEnable(true);
+		} else {
+			// 禁用侧边栏
+			setSlidingMenuEnable(false);
+		}
+
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+
+	}
+
+	/**
+	 * 开启或禁用侧边栏
+	 * 
+	 * @param enable
+	 */
+	protected void setSlidingMenuEnable(boolean enable) {
+		// 获取侧边栏对象
+		MainActivity mainUI = (MainActivity) mActivity;
+		SlidingMenu slidingMenu = mainUI.getSlidingMenu();
+		if (enable) {
+			slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		} else {
+			slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+		}
+	}
+
+	@OnClick(R.id.btn_next)
+	public void nextPage(View view) {
+		// 跳到下个页面
+		int currentItem = mViewPager.getCurrentItem();
+		currentItem++;
+		mViewPager.setCurrentItem(currentItem);
 	}
 
 }

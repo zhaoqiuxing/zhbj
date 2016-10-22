@@ -72,8 +72,7 @@ public class NewsCenterPager extends BasePager {
 		fragment.setMenuData(mNewsData.data);
 		// 初始化4个菜单详情页
 		mMenuDetailPagers = new ArrayList<BaseMenuDetailPager>();
-		mMenuDetailPagers.add(new NewsMenuDetailPager(mActivity, mNewsData.data
-				.get(0).children));
+		mMenuDetailPagers.add(new NewsMenuDetailPager(mActivity, mNewsData.data.get(0).children));
 		mMenuDetailPagers.add(new TopicMenuDetailPager(mActivity));
 		mMenuDetailPagers.add(new PhotosMenuDetailPager(mActivity));
 		mMenuDetailPagers.add(new InteractMenuDetailPager(mActivity));
@@ -82,23 +81,24 @@ public class NewsCenterPager extends BasePager {
 		setCurrentDetailPager(0);
 
 	}
+
 	// 设置菜单详情页
-		public void setCurrentDetailPager(int position) {
-			// 重新给frameLayout添加内容
-			BaseMenuDetailPager pager = mMenuDetailPagers.get(position);// 获取当前应该显示的页面
-			View view = pager.mRootView;// 当前页面的布局
+	public void setCurrentDetailPager(int position) {
+		// 重新给frameLayout添加内容
+		BaseMenuDetailPager pager = mMenuDetailPagers.get(position);// 获取当前应该显示的页面
+		View view = pager.mRootView;// 当前页面的布局
 
-			// 清除之前旧的布局
-			flContent.removeAllViews();
+		// 清除之前旧的布局
+		flContent.removeAllViews();
 
-			flContent.addView(view);// 给帧布局添加布局
+		flContent.addView(view);// 给帧布局添加布局
 
-			// 初始化页面数据
-			pager.initData();
+		// 初始化页面数据
+		pager.initData();
 
-			// 更新标题
-			tvTitle.setText(mNewsData.data.get(position).title);
-		}
+		// 更新标题
+		tvTitle.setText(mNewsData.data.get(position).title);
+	}
 
 	private void getDataFromServer() {
 		HttpUtils utils = new HttpUtils();
